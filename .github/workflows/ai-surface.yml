@@ -1,0 +1,30 @@
+# Drop this file at: .github/workflows/ai-surface.yml
+#
+# What it does: on every pull request, ai-surface maps the AI attack surface of
+# the repo and posts an inventory comment. The gate fails the PR only when a NEW
+# high-risk surface is introduced relative to the base branch, so existing,
+# already-accepted findings never block a merge. This is a gate, not a one-time audit.
+
+name: AI Surface
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write   # required so the action can post / update the PR comment
+
+jobs:
+  ai-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so the gate can diff against the PR base ref
+
+      - uses: apisec-inc/AI-Surface@v1
+        with:
+          comment-on-pr: 'true'   # post / update the AI surface report on the PR
+          fail-on: 'high'         # on a PR, fails only on NEWLY introduced high-severity findings
