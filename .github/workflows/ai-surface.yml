@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0   # full history so the gate can diff against the PR base ref
 
-      - uses: apisec-inc/AI-Surface@v1
+      - uses: rajaramr7/AI-Surface@fix/action-base-diff-safe-directory
         with:
           comment-on-pr: 'true'   # post / update the AI surface report on the PR
           fail-on: 'high'         # fail the build when a high-severity AI surface is present
